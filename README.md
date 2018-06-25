@@ -1,5 +1,9 @@
 NOTES:
-  
+
+REST web services
+SQlite3 database (lite relational database) 
+
+    
 python 3
 
   //activate it
