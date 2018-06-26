@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, render_template
 from database import Client, Request, Product_Area, Base
 
 from sqlalchemy import create_engine
@@ -14,7 +14,7 @@ session = Session()
 
 @app.route('/')
 def hello_world():
-    return 'Hello, World!'
+    return render_template('index.html')
 
 @app.route('/clients', methods=['GET'])
 def getClients():

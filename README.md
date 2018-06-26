@@ -9,7 +9,7 @@ python 3
   //activate it
   . venv/bin/activate
   //start the server
-  server/run.sh
+  ./run.sh
 
 INSTALL
 
@@ -18,4 +18,4 @@ pip install Flask SQLAlchemy
 //create the virtualenv
 python3 -m venv venv
 //generate and populate the sqlite database :
-python server/db_mock.py
+python db_mock.py
