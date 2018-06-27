@@ -1,2 +1,33 @@
 <!doctype html>
-<title>Hello from Flask</title>
+<html>
+  <head>
+    <title>BriteCore test assignment</title>
+    <meta charset="utf-8" />
+    <link rel="shortcut icon" href="{{ url_for('static',filename='assets/favicon.ico') }}" type="image/x-icon" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}"/>
+
+    <script src="{{ url_for('static',filename='vendors/knockout-3.4.2.js') }}" type="text/javascript"></script>
+    <script src="{{ url_for('static',filename='js/britecoretest.js') }}" type="text/javascript"></script>
+  </head>
+  <body>
+    <article id="content">
+      <!-- WIP -->
+      <select data-bind="foreach: clients">
+        <option data-bind="text: name, value: id"></option>
+      </select>
+
+      <select data-bind="foreach: productsAreas">
+        <option data-bind="text: name, value: id"></option>
+      </select>
+      
+      <ol data-bind="foreach: requests">
+        <li>
+          <span data-bind="text: title"></span>
+          <span data-bind="text: priority"></span>
+          <span data-bind="text: target_date"></span>
+        </li>
+      </ol>
+
+    </article>
+  </body>
+</html>

@@ -1,10 +1,17 @@
+#TODO: Use flask_sqlalchemy instead
+
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Date
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
+
 
 import datetime
 
 Base = declarative_base()
+engine = create_engine('sqlite:///britecore.db', echo=True)
+Base.metadata.create_all(engine)
+Session = sessionmaker(bind=engine)
+dbSession = Session()
 
 class Client(Base):
     __tablename__ = 'clients'
@@ -65,5 +72,3 @@ class Request(Base):
     def __repr__(self):
             return "%s" % (self.title)
 
-engine = create_engine('sqlite:///britecore.db', echo=True)
-Base.metadata.create_all(engine)
