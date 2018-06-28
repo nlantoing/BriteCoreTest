@@ -35,7 +35,7 @@ def createRequest():
     entry = Request(
         title = data.get('title'),
         description = data.get('description'),
-        target_date = datetime.datetime.now(),
+        target_date = datetime.datetime.fromtimestamp(int(data.get('target_date'))),
         priority = data.get('priority'),
         client_id = data.get('client'),
         product_area_id = data.get('product_area'))

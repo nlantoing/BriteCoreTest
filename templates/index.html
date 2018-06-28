@@ -11,10 +11,8 @@
   </head>
   <body>
     <article id="content">
+      <!-- Requests list -->
       <section class="request_list">
-        <!-- WIP -->
-        
-      
         <ol data-bind="foreach: requests">
           <li>
             <span data-bind="text: title"></span>
@@ -26,6 +24,8 @@
           </li>
         </ol>
       </section>
+
+      <!-- adding new request form -->
       <section class="request_add">
         <form data-bind="submit: postRequest" action="/requests" method="post">
           <p>
@@ -42,7 +42,9 @@
           </p>
           <p>
             <label>Due date :</label>
-            <input data-bind="value: newRequest.target_date" type="date" name="target_date" />
+            <input data-bind="value: newRequest.due_date" type="date" />
+            <input data-bind="value: target_date"
+                   type="hidden" name="target_date" />
           </p>
           <p>
             <label>Client :</label>

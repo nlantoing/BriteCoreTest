@@ -35,14 +35,17 @@ function RequestsViewModel() {
     self.clients = ko.observableArray();
     self.productsAreas = ko.observableArray();
     self.requests = ko.observableArray();
-    self.newRequest = ko.observable({
+    self.newRequest = {
         'title': ko.observable(),
         'description': ko.observable(),
         'priority': ko.observable(),
-        'target_date': ko.observable(Date.now()),
+        'due_date': ko.observable(),
         'client_id': ko.observable(),
         'product_area_id': ko.observable()
-    });
+    };
+    self.target_date = ko.computed(function(){
+        return new Date(this.newRequest.due_date()).getTime() / 1000;
+    },this);
 
     //WEB SERVICES
 
@@ -98,7 +101,7 @@ function RequestsViewModel() {
 
     //  post/put/delete
     self.postRequest = function(form){
-        //TODO: check if all values are filled
+        //TODO: do the validator
         //convert data to a dictionary before passing it to the request
         self.request('/','requests','POST',form).then((response) => {
             let entry = JSON.parse(response.response);
