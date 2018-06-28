@@ -1,23 +1,18 @@
-#TODO: Use flask_sqlalchemy instead
-
-from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Date
-from sqlalchemy.orm import relationship, sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
-
-
+#TODO: move app config (db, app etc) elsewhere
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 import datetime
 
-Base = declarative_base()
-engine = create_engine('sqlite:///britecore.db', echo=True)
-Base.metadata.create_all(engine)
-Session = sessionmaker(bind=engine)
-dbSession = Session()
+#TODO: the db uri should be defined in a conf file
+app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///britecore.db'
+db = SQLAlchemy(app)
 
-class Client(Base):
+class Client(db.Model):
     __tablename__ = 'clients'
 
-    id = Column(Integer, primary_key=True)
-    name = Column(String(32), nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(32),unique=True, nullable=False)
 
     def jsonize(self):
         #yup I know this is not even a word
@@ -30,11 +25,11 @@ class Client(Base):
         return self.name
 
 
-class Product_Area(Base):
+class Product_Area(db.Model):
     __tablename__ = 'products_areas'
 
-    id = Column(Integer, primary_key=True)
-    name = Column(String(32), nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(32), unique=True, nullable=False)
 
     def jsonize(self):
         return {
@@ -45,18 +40,18 @@ class Product_Area(Base):
     def __repr__(self):
         return self.name
 
-class Request(Base):
+class Request(db.Model):
     __tablename__ = 'requests'
 
-    id = Column(Integer, primary_key=True)
-    title = Column(String(32), nullable=False)
-    description = Column(String(512))
-    priority = Column(Integer)
-    target_date = Column(Date)
-    client_id = Column(Integer, ForeignKey('clients.id'))
-    product_area_id = Column(Integer, ForeignKey('products_areas.id'))
-    client = relationship(Client)
-    product_area = relationship(Product_Area)
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(32), nullable=False)
+    description = db.Column(db.String(512))
+    priority = db.Column(db.Integer)
+    target_date = db.Column(db.Date)
+    client_id = db.Column(db.Integer, db.ForeignKey('clients.id'))
+    product_area_id = db.Column(db.Integer, db.ForeignKey('products_areas.id'))
+    client = db.relationship(Client)
+    product_area = db.relationship(Product_Area)
 
     def jsonize(self):
         return {

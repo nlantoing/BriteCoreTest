@@ -17,13 +17,14 @@ function ProductArea(id, name) {
 //Request representation
 function Request(request) {
     const self = this;
+    self.id = request.id;
     self.title = request.title;
     self.description = request.description;
     self.priority = request.priority;
     self.target_date = request.target_date;
     //TODO : should we just get the id and retrieve the correct instance here?
     self.client = request.client;
-    self.product_area = request.productArea;
+    self.product_area = request.product_area;
 };
 
 function RequestsViewModel() {
@@ -34,14 +35,24 @@ function RequestsViewModel() {
     self.clients = ko.observableArray();
     self.productsAreas = ko.observableArray();
     self.requests = ko.observableArray();
+    self.newRequest = ko.observable({
+        'title': ko.observable(),
+        'description': ko.observable(),
+        'priority': ko.observable(),
+        'target_date': ko.observable(Date.now()),
+        'client_id': ko.observable(),
+        'product_area_id': ko.observable()
+    });
 
     //WEB SERVICES
 
     //make an AJAX request
     //return a promise
-    self.request = function(domain,addr,method){
+    self.request = function(domain,addr,method,form){
         return new Promise((action,reject) => {
             let req = new XMLHttpRequest();
+            let data = new FormData(form);
+
             req.open(method, domain+addr);
             req.onreadystatechange = () => {
                 if (req.readyState === XMLHttpRequest.DONE) {
@@ -50,7 +61,7 @@ function RequestsViewModel() {
                     }
                 }
             };
-            req.send();
+            req.send(data);
         });
     };
     
@@ -86,14 +97,25 @@ function RequestsViewModel() {
     };
 
     //  post/put/delete
-    self.createRequest = function(){};
+    self.postRequest = function(form){
+        //TODO: check if all values are filled
+        //convert data to a dictionary before passing it to the request
+        self.request('/','requests','POST',form).then((response) => {
+            let entry = JSON.parse(response.response);
+            self.requests.push(new Request(entry));
+        });
+    };
+    
     self.updateRequest = function(){};
-    self.deleteRequest = function(){};
+    self.deleteRequest = function(req){
+        self.request('/','requests/'+req.id,'DELETE').then((response) => {
+            self.requests.destroy(req);
+        });
+    };
 
     //ACTIONS
     self.sort = function(){};
     self.addRequest = function(){};
-    self.removeRequest = function(){};
 
     //INIT
     self.getClients();

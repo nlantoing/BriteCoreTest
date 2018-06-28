@@ -1,14 +1,13 @@
-from flask import Flask, jsonify, request, render_template
-from database import Client, Request, Product_Area
-from flask_sqlalchemy import SQLAlchemy
+from flask import jsonify, request, render_template
+from database import Client, Request, Product_Area, db, app
 
-app = Flask(__name__)
-#TODO: the db uri should be defined in a conf file
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///britecore.db'
-db = SQLAlchemy(app)
+import datetime
+
+#TODO: urgh ugly removeme!
+app = app
 
 @app.route('/')
-def hello_world():
+def hello():
     return render_template('index.html')
 
 @app.route('/clients', methods=['GET'])
@@ -32,18 +31,28 @@ def getRequests():
 @app.route('/requests',methods=['POST'])
 def createRequest():
     #Create a new request
+    data = request.form
     entry = Request(
-        title = request.data.title,
-        description = request.data.description,
+        title = data.get('title'),
+        description = data.get('description'),
         target_date = datetime.datetime.now(),
-        priority = request.data.priority,
-        client_id = request.data.client_id,
-        product_area_id = request.data.product_area_id)
+        priority = data.get('priority'),
+        client_id = data.get('client'),
+        product_area_id = data.get('product_area'))
     db.session.add(entry)
     db.session.commit()
-    return 200
+    return jsonify(entry.jsonize())
     
 @app.route('/requests/<int:request_id>', methods=['PUT','DELETE'])
 def modifyRequest(request_id):
     #modify or remove an existing request
-    return "TODO!"
+    toUpdate = Request.query.get(request_id)
+    #TODO : return an error if it doesn't exist
+    if toUpdate is not None:
+        if 'DELETE' == request.method:
+            db.session.delete(toUpdate)
+            db.session.commit()
+            #TODO
+
+    #TODO: return an httpcode if ajax request
+    return render_template('index.html')

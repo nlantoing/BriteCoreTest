@@ -11,23 +11,56 @@
   </head>
   <body>
     <article id="content">
-      <!-- WIP -->
-      <select data-bind="foreach: clients">
-        <option data-bind="text: name, value: id"></option>
-      </select>
-
-      <select data-bind="foreach: productsAreas">
-        <option data-bind="text: name, value: id"></option>
-      </select>
+      <section class="request_list">
+        <!-- WIP -->
+        
       
-      <ol data-bind="foreach: requests">
-        <li>
-          <span data-bind="text: title"></span>
-          <span data-bind="text: priority"></span>
-          <span data-bind="text: target_date"></span>
-        </li>
-      </ol>
-
+        <ol data-bind="foreach: requests">
+          <li>
+            <span data-bind="text: title"></span>
+            <span data-bind="text: priority"></span>
+            <span data-bind="text: client.name"></span>
+            <span data-bind="text: product_area.name"></span>
+            <span data-bind="text: target_date"></span>
+            <input data-bind="click: $parent.deleteRequest" type="button" value="Remove" />
+          </li>
+        </ol>
+      </section>
+      <section class="request_add">
+        <form data-bind="submit: postRequest" action="/requests" method="post">
+          <p>
+            <label>Title :</label>
+            <input data-bind="value: newRequest.title" type="text" name="title" />
+          </p>
+          <p>
+            <label>Description :</label>
+            <textarea data-bind="value: newRequest.description" name="description"></textarea>
+          </p>
+          <p>
+            <label>Priority :</label>
+            <input data-bind="value: newRequest.priority" type="text" name="priority" />
+          </p>
+          <p>
+            <label>Due date :</label>
+            <input data-bind="value: newRequest.target_date" type="date" name="target_date" />
+          </p>
+          <p>
+            <label>Client :</label>
+            <select name="client" data-bind="value: newRequest.client_id, foreach: clients">
+              <option data-bind="text: name, value: id"></option>
+            </select>
+          </p>
+          <p>
+            <label>Product area :</label>
+            <select name="product_area" data-bind="value: newRequest.product_area_id, foreach: productsAreas">
+              <option data-bind="text: name, value: id"></option>
+            </select>
+          </p>
+          <p>
+            <input type="submit" value="save" />
+          </p>
+        </form>
+      </section>
     </article>
   </body>
 </html>
