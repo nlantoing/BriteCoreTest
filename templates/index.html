@@ -15,12 +15,25 @@
       <section class="request_list">
         <ol data-bind="foreach: requests">
           <li>
-            <span data-bind="text: title"></span>
-            <span data-bind="text: priority"></span>
-            <span data-bind="text: client.name"></span>
-            <span data-bind="text: product_area.name"></span>
-            <span data-bind="text: target_date"></span>
+            <input type="text" data-bind="value: title, enable: isEdited()" />
+            <input type="text" data-bind="value: priority, enable: isEdited()"/>
+            <select type="text" data-bind="enable: isEdited(),
+                                           value: client().id, foreach: $parent.clients">
+              <option data-bind="text: name, value: id"></option>
+            </select>
+            <select data-bind="enable: isEdited(),
+                               value: product_area().id, foreach: $parent.productsAreas">
+              <option data-bind="text: name, value: id"></option>
+            </select>
+            <input type="text" data-bind="value: target_date, enable: isEdited()"/>
+            <input data-bind="click: $parent.toogleDetails" type="button" value="Details" />
             <input data-bind="click: $parent.deleteRequest" type="button" value="Remove" />
+            <p data-bind="visible: fullDisplay()">
+              <textarea data-bind="value: description, enable: isEdited()" ></textarea>
+              <input data-bind="click: $parent.toogleEdit, visible: !isEdited()" type="button" value="edit"/>
+              <input data-bind="click: $parent.cancelEdit, visible: isEdited()" type="button" value="cancel"/>
+              <input data-bind="click: $parent.updateRequest, visible: isEdited()" type="button" value="save"/>
+            </p>
           </li>
         </ol>
       </section>

@@ -51,8 +51,15 @@ def modifyRequest(request_id):
     if toUpdate is not None:
         if 'DELETE' == request.method:
             db.session.delete(toUpdate)
-            db.session.commit()
-            #TODO
+        else:
+            data = request.form
+            toUpdate.title = data.get('title')
+            toUpdate.description = data.get('description')
+            toUpdate.target_date = datetime.datetime.fromtimestamp(int(data.get('target_date')))
+            toUpdate.priority = data.get('priority')
+            toUpdate.client_id = data.get('client_id')
+            toUpdate.product_area_id = data.get('product_area_id')
 
-    #TODO: return an httpcode if ajax request
+    db.session.commit()
+    #TODO: return httpcode if ajax request
     return render_template('index.html')

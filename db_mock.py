@@ -2,7 +2,7 @@ from flask import jsonify, request, render_template
 from database import Client, Request, Product_Area, db, app
 
 import datetime
-db<<<.create_all()
+db.create_all()
 db.session.add_all([
     Client(name='Client A'),
     Client(name='Client B'),

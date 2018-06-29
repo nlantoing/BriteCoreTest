@@ -1,4 +1,5 @@
 #TODO: move app config (db, app etc) elsewhere
+
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 import datetime
@@ -6,6 +7,7 @@ import datetime
 #TODO: the db uri should be defined in a conf file
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///britecore.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 class Client(db.Model):

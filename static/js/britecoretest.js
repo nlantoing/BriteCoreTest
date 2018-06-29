@@ -1,5 +1,13 @@
 //followed learn.knockoutjs tutorial and decided to keep their naming convention for my classes
 
+//Custom bindings
+ko.bindingHandlers.enable = {
+    update: function(element,valueAccessor){
+        let shouldEnable = valueAccessor();
+        valueAccessor() ? element.removeAttribute('disabled') : element.setAttribute('disabled','disabled'); 
+    }
+}
+
 //Client model
 function Client(id, name) {
     const self = this;
@@ -18,13 +26,15 @@ function ProductArea(id, name) {
 function Request(request) {
     const self = this;
     self.id = request.id;
-    self.title = request.title;
-    self.description = request.description;
-    self.priority = request.priority;
-    self.target_date = request.target_date;
+    self.title = ko.observable(request.title);
+    self.description = ko.observable(request.description);
+    self.priority = ko.observable(request.priority);
+    self.target_date = ko.observable(request.target_date);
     //TODO : should we just get the id and retrieve the correct instance here?
-    self.client = request.client;
-    self.product_area = request.product_area;
+    self.client = ko.observable(request.client);
+    self.product_area = ko.observable(request.product_area);
+    self.fullDisplay = ko.observable(false);
+    self.isEdited = ko.observable(false);
 };
 
 function RequestsViewModel() {
@@ -51,11 +61,9 @@ function RequestsViewModel() {
 
     //make an AJAX request
     //return a promise
-    self.request = function(domain,addr,method,form){
+    self.request = function(domain,addr,method,data){
         return new Promise((action,reject) => {
             let req = new XMLHttpRequest();
-            let data = new FormData(form);
-
             req.open(method, domain+addr);
             req.onreadystatechange = () => {
                 if (req.readyState === XMLHttpRequest.DONE) {
@@ -101,15 +109,35 @@ function RequestsViewModel() {
 
     //  post/put/delete
     self.postRequest = function(form){
+        let data = new FormData(form);
         //TODO: do the validator
-        //convert data to a dictionary before passing it to the request
-        self.request('/','requests','POST',form).then((response) => {
+        self.request('/','requests','POST',data).then((response) => {
             let entry = JSON.parse(response.response);
             self.requests.push(new Request(entry));
+            //reset form
+            self.newRequest.title(null);
+            self.newRequest.description(null);
+            self.newRequest.priority(null);
         });
     };
     
-    self.updateRequest = function(){};
+    self.updateRequest = function(req){
+        let data = new FormData();
+        data.append('title',req.title());
+        data.append('description',req.description());
+        data.append('priority', req.priority());
+        //data.append('target_date', req.target_date());
+        data.append('target_date', Math.round(new Date().getTime() / 1000));
+        data.append('client_id', req.client().id);
+        data.append('product_area_id', req.product_area().id);
+
+        //TODO: do the validator
+        //TODO : use the Request object instead of the form?
+        self.request('/','requests/'+req.id,'PUT',data).then((response) => {
+            self.toogleEdit(req);
+        });
+    };
+    
     self.deleteRequest = function(req){
         self.request('/','requests/'+req.id,'DELETE').then((response) => {
             self.requests.destroy(req);
@@ -118,8 +146,21 @@ function RequestsViewModel() {
 
     //ACTIONS
     self.sort = function(){};
-    self.addRequest = function(){};
+    self.toogleDetails = function(req){
+        let action = req.fullDisplay() ? false : true;
+        req.fullDisplay(action);
+    };
 
+    self.toogleEdit = function(req){
+        let action = req.isEdited() ? false : true;
+        req.isEdited(action);
+    };
+
+    self.cancelEdit = function(req){
+        //TODO: should restore old request state before
+        self.toogleEdit(req);
+    };
+    
     //INIT
     self.getClients();
     self.getProductsAreas();
