@@ -1,0 +1,15 @@
+input[disabled] {
+    /* TODO */
+}
+
+#content{
+
+}
+
+ol.request_list{
+    list-style: none;
+}
+
+label, input, textarea{
+    vertical-align: middle;
+}
