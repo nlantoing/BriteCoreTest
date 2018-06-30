@@ -1,13 +1,11 @@
 #TODO: move app config (db, app etc) elsewhere
-
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+
 import datetime
 
-#TODO: the db uri should be defined in a conf file
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///britecore.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config.from_envvar('CONF')
 db = SQLAlchemy(app)
 
 class Client(db.Model):
@@ -15,6 +13,7 @@ class Client(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32),unique=True, nullable=False)
+    requests = db.relationship('Request', backref='client', lazy=True)
 
     def jsonize(self):
         #yup I know this is not even a word
@@ -32,6 +31,7 @@ class Product_Area(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32), unique=True, nullable=False)
+    requests = db.relationship('Request', backref='product_area', lazy=True)
 
     def jsonize(self):
         return {
@@ -50,12 +50,16 @@ class Request(db.Model):
     description = db.Column(db.String(512))
     priority = db.Column(db.Integer)
     target_date = db.Column(db.Date)
-    client_id = db.Column(db.Integer, db.ForeignKey('clients.id'))
-    product_area_id = db.Column(db.Integer, db.ForeignKey('products_areas.id'))
-    client = db.relationship(Client)
-    product_area = db.relationship(Product_Area)
-
+    client_id = db.Column(db.Integer, db.ForeignKey('clients.id'), nullable=False)
+    product_area_id = db.Column(db.Integer, db.ForeignKey('products_areas.id'), nullable=False)
+    
     def jsonize(self):
+        #Should not happen but happened a few times anyway, TODO: fixme!
+        if self.client is None:
+            self.client = Client(name='Broken')
+        if self.product_area is None:
+            self.product_area = Product_Area(name='Broken')
+        
         return {
             'id': self.id,
             'title': self.title,

@@ -33,7 +33,11 @@
                                value: product_area().id, foreach: $parent.productsAreas">
               <option data-bind="text: name, value: id"></option>
             </select>
-            <input class="col-xs-2" type="date" data-bind="value: target_date, enable: isEdited()"/>
+            <span class="col-xs-2">
+              <input  type="date" name="due_date" data-bind="value: due_date, enable: isEdited()"/>
+              <input data-bind="value: target_date" type="hidden" name="target_date" />
+            </span>
+            
             <span  class="col-xs-3">
               <input data-bind="click: $parent.toogleDetails" type="button" value="Details" />
               <input data-bind="click: $parent.deleteRequest" type="button" value="Remove" />

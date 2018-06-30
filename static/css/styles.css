@@ -14,3 +14,7 @@ ol.request_list{
 label, input, textarea{
     vertical-align: middle;
 }
+
+select{
+    padding: 3px 15px;
+}

@@ -29,7 +29,10 @@ function Request(request) {
     self.title = ko.observable(request.title);
     self.description = ko.observable(request.description);
     self.priority = ko.observable(request.priority);
-    self.target_date = ko.observable(request.target_date);
+    self.due_date = ko.observable(request.due_date.toISOString().slice(0,10));
+    self.target_date = ko.computed(function(){
+        return new Date(this.due_date()).getTime() / 1000;
+    },this);
     //TODO : should we just get the id and retrieve the correct instance here?
     self.client = ko.observable(request.client);
     self.product_area = ko.observable(request.product_area);
@@ -102,7 +105,7 @@ function RequestsViewModel() {
         self.request('/','requests','GET').then((response) => { 
             let req = JSON.parse(response.response).results;
             for(let i = 0; i < req.length; i++){
-                self.requests.push(new Request(req[i]));
+                self.createRequest(req[i]);
             }
         });
     };
@@ -113,7 +116,7 @@ function RequestsViewModel() {
         //TODO: do the validator
         self.request('/','requests','POST',data).then((response) => {
             let entry = JSON.parse(response.response);
-            self.requests.push(new Request(entry));
+            self.createRequest(entry);
             //reset form
             self.newRequest.title(null);
             self.newRequest.description(null);
@@ -145,6 +148,12 @@ function RequestsViewModel() {
     };
 
     //ACTIONS
+    //create a new request from a JSON entry returned by the server
+    self.createRequest = function(entry){
+        entry.due_date = new Date(entry.target_date);
+        self.requests.push(new Request(entry));
+    };
+    
     self.sort = function(){};
     self.toogleDetails = function(req){
         let action = req.fullDisplay() ? false : true;

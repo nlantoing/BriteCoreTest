@@ -1,10 +1,13 @@
-from flask import jsonify, request, render_template
+from flask import Flask, jsonify, request, render_template
 from database import Client, Request, Product_Area, db, app
 
 import datetime
 
 #TODO: urgh ugly removeme!
 app = app
+#app = Flask(__name__)
+#app.config.from_envvar('CONF')
+
 
 @app.route('/')
 def hello():
