@@ -20,7 +20,7 @@
   <body>
     <article id="content" class="container-fluid">
       <!-- Requests list -->
-      <section class="request_list container">
+      <section class="container">
         <ol class="request_list" data-bind="foreach: requests">
           <li class="row">
             <input class="col-xs-2" type="text" data-bind="value: title, enable: isEdited()" />
@@ -33,7 +33,7 @@
                                value: product_area().id, foreach: $parent.productsAreas">
               <option data-bind="text: name, value: id"></option>
             </select>
-            <input class="col-xs-2" type="text" data-bind="value: target_date, enable: isEdited()"/>
+            <input class="col-xs-2" type="date" data-bind="value: target_date, enable: isEdited()"/>
             <span  class="col-xs-3">
               <input data-bind="click: $parent.toogleDetails" type="button" value="Details" />
               <input data-bind="click: $parent.deleteRequest" type="button" value="Remove" />
@@ -52,7 +52,7 @@
 
       <!-- adding new request form -->
       <section class="request_add container">
-        <form data-bind="submit: postRequest" action="/requests" method="post">
+        <form name="create_request_form" data-bind="submit: postRequest" action="/requests" method="post">
           <p class="row">
             <label class="col-xs-3">Title :</label>
             <input class="col-xs-9" data-bind="value: newRequest.title" type="text" name="title" />

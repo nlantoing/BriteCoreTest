@@ -8,6 +8,7 @@ input[disabled] {
 
 ol.request_list{
     list-style: none;
+    padding: 1em 0;
 }
 
 label, input, textarea{
