@@ -5,31 +5,28 @@ import datetime
 
 #TODO: urgh ugly removeme!
 app = app
-#app = Flask(__name__)
-#app.config.from_envvar('CONF')
-
 
 @app.route('/')
 def hello():
-    return render_template('index.html')
+    return render_template('index.html'), 200, {'ContentType':'text/html'}
 
 @app.route('/clients', methods=['GET'])
 def getClients():
     #Get requests list or create a new one
     requests = db.session.query(Client).all()
-    return jsonify(results=[i.jsonize() for i in requests])
+    return jsonify(results=[i.jsonize() for i in requests]), 200, {'ContentType':'application/json'}
 
 @app.route('/products_areas', methods=['GET'])
 def getProducts():
     #Get requests list or create a new one
     requests = db.session.query(Product_Area).all()
-    return jsonify(results=[i.jsonize() for i in requests])
+    return jsonify(results=[i.jsonize() for i in requests]), 200, {'ContentType':'application/json'}
 
 @app.route('/requests', methods=['GET'])
 def getRequests():
     #Get requests list or create a new one
-    requests = db.session.query(Request).all()
-    return jsonify(results=[i.jsonize() for i in requests])
+    requests = db.session.query(Request).order_by(Request.priority).all()
+    return jsonify(results=[i.jsonize() for i in requests]), 200, {'ContentType':'application/json'}
 
 @app.route('/requests',methods=['POST'])
 def createRequest():
@@ -44,7 +41,7 @@ def createRequest():
         product_area_id = data.get('product_area'))
     db.session.add(entry)
     db.session.commit()
-    return jsonify(entry.jsonize())
+    return jsonify(entry.jsonize()), 200, {'ContentType':'application/json'}
     
 @app.route('/requests/<int:request_id>', methods=['PUT','DELETE'])
 def modifyRequest(request_id):
@@ -63,6 +60,8 @@ def modifyRequest(request_id):
             toUpdate.client_id = data.get('client_id')
             toUpdate.product_area_id = data.get('product_area_id')
 
-    db.session.commit()
-    #TODO: return httpcode if ajax request
-    return render_template('index.html')
+        db.session.commit()
+        
+        return jsonify({'updated_request': request_id}), 200, {'ContentType':'application/json'}
+    else:
+        return jsonify({'updated_request': request_id}), 404, {'ContentType':'application/json'}

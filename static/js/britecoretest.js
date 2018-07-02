@@ -100,7 +100,7 @@ function RequestsViewModel() {
             }
         });
     };
-    //finally get existing requests
+    //get existing requests
     self.getRequests = function(){
         self.request('/','requests','GET').then((response) => { 
             let req = JSON.parse(response.response).results;
@@ -129,8 +129,7 @@ function RequestsViewModel() {
         data.append('title',req.title());
         data.append('description',req.description());
         data.append('priority', req.priority());
-        //data.append('target_date', req.target_date());
-        data.append('target_date', Math.round(new Date().getTime() / 1000));
+        data.append('target_date', req.target_date());
         data.append('client_id', req.client().id);
         data.append('product_area_id', req.product_area().id);
 
