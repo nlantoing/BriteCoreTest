@@ -18,3 +18,22 @@ label, input, textarea{
 select{
     padding: 3px 15px;
 }
+
+.request_add{
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #fff;
+}
+
+.createReq_button{
+    display: inline-block;
+    width: 100%;
+}
+
+.createReq_form{
+    border: 1px solid black;
+    margin-top: 1em;
+    padding: .5em;
+}

@@ -67,41 +67,44 @@
 
       <!-- adding new request form -->
       <section class="request_add container">
-        <form name="create_request_form" data-bind="submit: postRequest" action="/requests" method="post">
-          <p class="row">
-            <label class="col-xs-3">Title :</label>
-            <input class="col-xs-9" data-bind="value: newRequest.title" type="text" name="title" />
-          </p>
-          <p class="row">
-            <label class="col-xs-3">Description :</label>
-            <textarea class="col-xs-9" data-bind="value: newRequest.description" name="description"></textarea>
-          </p>
-          <p class="row">
-            <label class="col-xs-3">Priority :</label>
-            <input class="col-xs-9" data-bind="value: newRequest.priority" type="text" name="priority" />
-          </p>
-          <p class="row">
-            <label class="col-xs-3">Due date :</label>
-            <input class="col-xs-9" data-bind="value: newRequest.due_date" type="date" />
-            <input data-bind="value: target_date"
-                   type="hidden" name="target_date" />
-          </p>
-          <p class="row">
-            <label class="col-xs-3">Client :</label>
-            <select class="col-xs-9" name="client" data-bind="value: newRequest.client_id, foreach: clients">
-              <option data-bind="text: name, value: id"></option>
-            </select>
-          </p>
-          <p class="row">
-            <label class="col-xs-3">Product area :</label>
-            <select class="col-xs-9" name="product_area" data-bind="value: newRequest.product_area_id, foreach: productsAreas">
-              <option data-bind="text: name, value: id"></option>
-            </select>
-          </p>
-          <p class="row">
-            <input class="col-xs-offset-1 col-xs-1" type="submit" value="save" />
-          </p>
-        </form>
+        <button class="createReq_button" data-bind="click: toogleCreateReq">Add new request</button>
+
+        <!-- form -->
+        <div class="createReq_form" data-bind="visible: toogleNewRequest()">
+          <form name="create_request_form" data-bind="submit: postRequest" action="/requests" method="post">
+            <p class="row">
+              <label class="col-xs-3">Title :</label>
+              <input class="col-xs-8" type="text" name="title" />
+            </p>
+            <p class="row">
+              <label class="col-xs-3">Description :</label>
+              <textarea class="col-xs-8" name="description"></textarea>
+            </p>
+            <p class="row">
+              <label class="col-xs-3">Priority :</label>
+              <input class="col-xs-8" type="text" name="priority" />
+            </p>
+            <p class="row">
+              <label class="col-xs-3">Due date :</label>
+              <input class="col-xs-8" name="due_date" type="date" />
+            </p>
+            <p class="row">
+              <label class="col-xs-3">Client :</label>
+              <select class="col-xs-8" name="client" data-bind="foreach: clients">
+                <option data-bind="text: name, value: id"></option>
+              </select>
+            </p>
+            <p class="row">
+              <label class="col-xs-3">Product area :</label>
+              <select class="col-xs-8" name="product_area" data-bind="foreach: productsAreas">
+                <option data-bind="text: name, value: id"></option>
+              </select>
+            </p>
+            <p class="row">
+              <input class="col-xs-offset-1 col-xs-1" type="submit" value="save" />
+            </p>
+          </form>
+        </div>
       </section>
     </article>
   </body>

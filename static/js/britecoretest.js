@@ -48,17 +48,7 @@ function RequestsViewModel() {
     self.clients = ko.observableArray();
     self.productsAreas = ko.observableArray();
     self.requests = ko.observableArray();
-    self.newRequest = {
-        'title': ko.observable(),
-        'description': ko.observable(),
-        'priority': ko.observable(),
-        'due_date': ko.observable(),
-        'client_id': ko.observable(),
-        'product_area_id': ko.observable()
-    };
-    self.target_date = ko.computed(function(){
-        return new Date(this.newRequest.due_date()).getTime() / 1000;
-    },this);
+    self.toogleNewRequest = ko.observable(null);
 
     //WEB SERVICES
 
@@ -113,14 +103,14 @@ function RequestsViewModel() {
     //  post/put/delete
     self.postRequest = function(form){
         let data = new FormData(form);
+        data.append('target_date', new Date(data.get('due_date')).getTime()/1000);
+        
         //TODO: do the validator
         self.request('/','requests','POST',data).then((response) => {
             let entry = JSON.parse(response.response);
             self.createRequest(entry);
             //reset form
-            self.newRequest.title(null);
-            self.newRequest.description(null);
-            self.newRequest.priority(null);
+            self.toogleNewRequest(null);
         });
     };
     
@@ -134,7 +124,6 @@ function RequestsViewModel() {
         data.append('product_area_id', req.product_area().id);
 
         //TODO: do the validator
-        //TODO : use the Request object instead of the form?
         self.request('/','requests/'+req.id,'PUT',data).then((response) => {
             self.toogleEdit(req);
         });
@@ -152,8 +141,18 @@ function RequestsViewModel() {
         entry.due_date = new Date(entry.target_date);
         self.requests.push(new Request(entry));
     };
-    
+
+    //TODO
     self.sort = function(){};
+    
+    //Toogle the create request form
+    self.toogleCreateReq = function(el){
+        if(null === self.toogleNewRequest())
+            self.toogleNewRequest(true);
+        else
+            self.toogleNewRequest(null);
+    };
+    
     self.toogleDetails = function(req){
         let action = req.fullDisplay() ? false : true;
         req.fullDisplay(action);
