@@ -3,7 +3,6 @@
 //Custom bindings
 ko.bindingHandlers.enable = {
     update: function(element,valueAccessor){
-        let shouldEnable = valueAccessor();
         valueAccessor() ? element.removeAttribute('disabled') : element.setAttribute('disabled','disabled'); 
     }
 };
@@ -44,11 +43,16 @@ function RequestsViewModel() {
     //not needed anymore with ES6 but I guess it is better to keep it
     const self = this;
 
+    //TODO: I think the whole new request form part should be in his own viewModel class
+    
     //PARAMETERS
     self.clients = ko.observableArray();
     self.productsAreas = ko.observableArray();
     self.requests = ko.observableArray();
+
+    //new requests params, moveme to the new class once done
     self.toogleNewRequest = ko.observable(null);
+    self.flashMessages = ko.observableArray([]);
 
     //WEB SERVICES
 
@@ -105,13 +109,17 @@ function RequestsViewModel() {
     self.postRequest = function(form){
         let data = new FormData(form);
         data.append('target_date', new Date(data.get('due_date')).getTime()/1000);
-        
-        //TODO: do the validator
+
+        //reinitialize flashmessages if any
+        self.flashMessages([]);
+
+        if(self.validateForm(data) > 0) return;
         self.request('/','requests','POST',data).then((response) => {
             let entry = JSON.parse(response.response);
             self.createRequest(entry);
             //reset form
             self.toogleNewRequest(null);
+            self.flashMessages([]);
         });
     };
     
@@ -124,7 +132,10 @@ function RequestsViewModel() {
         data.append('client_id', req.client().id);
         data.append('product_area_id', req.product_area().id);
 
-        //TODO: do the validator
+        //check if everything alright before sending the request
+        self.flashMessages([]);
+        if(self.validateForm(data) > 0) return;
+            
         self.request('/','requests/'+req.id,'PUT',data).then((response) => {
             self.toogleEdit(req);
         });
@@ -143,7 +154,31 @@ function RequestsViewModel() {
         self.requests.push(new Request(entry));
     };
 
-    //TODO
+    //validate a request form (for update or create) or display an alert if any input is invalid
+    self.validateForm = function(data){
+        var errorCount = 0;
+        if("" === data.get('title')){
+            self.flashMessages.push("Title can't be empty");
+            errorCount++;
+        }
+        if("" === data.get('priority')) {
+            self.flashMessages.push("You must set a priority");
+            errorCount++;
+        }
+        if("" === data.get('due_date')) {
+            self.flashMessages.push("You must specify a due date");
+            errorCount++;
+        }
+        if(isNaN(data.get('priority'))) {
+            self.flashMessages.push("Priority must be a number");
+            errorCount++;
+        }
+
+        return errorCount;
+    };
+
+
+    //TODO: sorting functions
     self.sort = function(){};
     
     //Toogle the create request form

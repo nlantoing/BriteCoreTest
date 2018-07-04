@@ -74,7 +74,7 @@
           <form name="create_request_form" data-bind="submit: postRequest" action="/requests" method="post">
             <p class="row">
               <label class="col-xs-3">Title :</label>
-              <input class="col-xs-8" type="text" name="title" />
+              <input class="col-xs-8" type="text" name="title" data-bind="" />
             </p>
             <p class="row">
               <label class="col-xs-3">Description :</label>
@@ -105,6 +105,14 @@
             </p>
           </form>
         </div>
+      </section>
+
+      <!-- Flash messages section -->
+      <section class="flash_messages" data-bind="visible: flashMessages().length">
+        <ul data-bind="foreach: flashMessages">
+          <li data-bind="text: $data"></li>
+        </ul>
+        <button data-bind="click: () => flashMessages([])">clear</button>
       </section>
     </article>
   </body>
