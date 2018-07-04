@@ -1,14 +1,11 @@
+/* global rules */
+
 input[disabled] {
     /* TODO */
 }
 
 #content{
 
-}
-
-ol.request_list{
-    list-style: none;
-    padding: 1em 0;
 }
 
 label, input, textarea{
@@ -19,12 +16,24 @@ select{
     padding: 3px 15px;
 }
 
+/* Requests list section */
+
+.request_list{
+    margin-bottom: 2em;
+}
+
+.request_list > ol{
+    list-style: none;
+    padding: 1em 0;
+}
+
+/* add request section */
+
 .request_add{
     position: fixed;
     left: 0;
     right: 0;
-    bottom: 0;
-    background-color: #fff;
+    bottom: 1em;
 }
 
 .createReq_button{
@@ -34,6 +43,6 @@ select{
 
 .createReq_form{
     border: 1px solid black;
-    margin-top: 1em;
     padding: .5em;
+    background-color: white;
 }

@@ -6,7 +6,7 @@ ko.bindingHandlers.enable = {
         let shouldEnable = valueAccessor();
         valueAccessor() ? element.removeAttribute('disabled') : element.setAttribute('disabled','disabled'); 
     }
-}
+};
 
 //Client model
 function Client(id, name) {
@@ -53,6 +53,7 @@ function RequestsViewModel() {
     //WEB SERVICES
 
     //make an AJAX request
+    //TODO: rename, ambiguous with the Request model
     //return a promise
     self.request = function(domain,addr,method,data){
         return new Promise((action,reject) => {
