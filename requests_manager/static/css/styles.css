@@ -1,13 +1,4 @@
 /* global rules */
-
-input[disabled] {
-    /* TODO */
-}
-
-#content{
-
-}
-
 label, input, textarea{
     vertical-align: middle;
 }
@@ -45,4 +36,24 @@ select{
     border: 1px solid black;
     padding: .5em;
     background-color: white;
+}
+
+/* Flash Messages section */
+.flash_messages{
+    position: fixed;
+    top: 1em;
+    left: 33%;
+    right: 33%;
+    margin: auto;
+    padding: 2em;
+    border: 2px solid black;
+    background-color: #ccf;
+    text-align:center;
+}
+
+.flash_messages > ul{
+    list-style: none;
+    padding: 0;
+    color: darkred;
+    font-weight: bold;
 }
