@@ -1,16 +1,13 @@
-#TODO: move app config (db, app etc) elsewhere
-from flask import Flask
+from flask import current_app, g
+from flask.cli import with_appcontext
 from flask_sqlalchemy import SQLAlchemy
 
 import datetime
 
-app = Flask(__name__)
-app.config.from_envvar('CONF')
-db = SQLAlchemy(app)
+db = SQLAlchemy()
 
 class Client(db.Model):
     __tablename__ = 'clients'
-
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32),unique=True, nullable=False)
     requests = db.relationship('Request', backref='client', lazy=True)
@@ -28,7 +25,6 @@ class Client(db.Model):
 
 class Product_Area(db.Model):
     __tablename__ = 'products_areas'
-
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32), unique=True, nullable=False)
     requests = db.relationship('Request', backref='product_area', lazy=True)
@@ -44,7 +40,6 @@ class Product_Area(db.Model):
 
 class Request(db.Model):
     __tablename__ = 'requests'
-
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(32), nullable=False)
     description = db.Column(db.String(512))

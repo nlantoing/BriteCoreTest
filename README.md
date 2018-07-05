@@ -14,7 +14,7 @@ python 3
 INSTALL
 
 //dependencies  
-pip install Flask SQLAlchemy flask_sqlalchemy
+pip install Flask SQLAlchemy flask_sqlalchemy pytest
 //create the virtualenv
 python3 -m venv venv
 //generate and populate the sqlite database :

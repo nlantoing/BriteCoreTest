@@ -1,7 +1,6 @@
-from flask import jsonify, request, render_template
-from database import Client, Request, Product_Area, db, app
-
+from requests_manager.database import db, Client, Request, Product_Area
 import datetime
+
 db.create_all()
 db.session.add_all([
     Client(name='Client A'),

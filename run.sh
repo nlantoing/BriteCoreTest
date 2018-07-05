@@ -1,4 +1,3 @@
 export FLASK_ENV=development
-export FLASK_APP=server.py
-export CONF=conf.cfg
+export FLASK_APP=requests_manager
 flask run

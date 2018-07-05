@@ -1,8 +1,11 @@
-from flask import Flask, jsonify, request, render_template
-from database import Client, Request, Product_Area, db, app
+from flask import Flask, jsonify, request, render_template, g, Blueprint
+from requests_manager.database import db, Client, Product_Area, Request
+import datetime, click
 
-import datetime
+#Meh' don't got any inspiration for a proper prefix and has this app will probably get only one BP...
+bp = Blueprint('requests', __name__, url_prefix="/")
 
+#check if a string is a proper number
 def isNumber(value):
     try:
         int(value)
@@ -10,35 +13,31 @@ def isNumber(value):
     except ValueError:
         return False
 
-#TODO: urgh ugly removeme!
-app = app
-
-@app.route('/')
+@bp.route('/')
 def hello():
     return render_template('index.html'), 200, {'ContentType':'text/html'}
 
-@app.route('/clients', methods=['GET'])
+@bp.route('/clients', methods=['GET'])
 def getClients():
     #Get requests list or create a new one
     requests = db.session.query(Client).all()
     return jsonify(results=[i.jsonize() for i in requests]), 200, {'ContentType':'application/json'}
 
-@app.route('/products_areas', methods=['GET'])
+@bp.route('/products_areas', methods=['GET'])
 def getProducts():
     #Get requests list or create a new one
     requests = db.session.query(Product_Area).all()
     return jsonify(results=[i.jsonize() for i in requests]), 200, {'ContentType':'application/json'}
 
-@app.route('/requests', methods=['GET'])
+@bp.route('/requests', methods=['GET'])
 def getRequests():
     #Get requests list or create a new one
     requests = db.session.query(Request).order_by(Request.priority).all()
     return jsonify(results=[i.jsonize() for i in requests]), 200, {'ContentType':'application/json'}
 
-@app.route('/requests',methods=['POST'])
+@bp.route('/requests',methods=['POST'])
 def createRequest():
     #Create a new request
-    #TODO: better and more explicit errors handling
     data = request.form
     try:
         if "" == data.get('title'):
@@ -66,7 +65,7 @@ def createRequest():
 
     return jsonify(entry.jsonize()), 200, {'ContentType':'application/json'}
     
-@app.route('/requests/<int:request_id>', methods=['PUT','DELETE'])
+@bp.route('/requests/<int:request_id>', methods=['PUT','DELETE'])
 def modifyRequest(request_id):
     #modify or remove an existing request
     toUpdate = Request.query.get(request_id)
