@@ -59,7 +59,7 @@ function RequestsViewModel() {
     //make an AJAX request
     //TODO: rename, ambiguous with the Request model
     //return a promise
-    self.request = function(domain,addr,method,data){
+    self.ajax = function(domain,addr,method,data){
         return new Promise((action,reject) => {
             let req = new XMLHttpRequest();
             req.open(method, domain+addr);
@@ -77,7 +77,7 @@ function RequestsViewModel() {
     //  get
     //get clients list
     self.getClients = function(){
-        self.request('/','clients','GET').then((response) => {
+        self.ajax('/','clients','GET').then((response) => {
             
             let clients = JSON.parse(response.response).results;
             for(let i = 0; i < clients.length; i++){
@@ -87,7 +87,7 @@ function RequestsViewModel() {
     };
     //get products areas list
     self.getProductsAreas = function(){
-        self.request('/','products_areas','GET').then((response) => {
+        self.ajax('/','products_areas','GET').then((response) => {
             
             let pa = JSON.parse(response.response).results;
             for(let i = 0; i < pa.length; i++){
@@ -97,7 +97,7 @@ function RequestsViewModel() {
     };
     //get existing requests
     self.getRequests = function(){
-        self.request('/','requests','GET').then((response) => { 
+        self.ajax('/','requests','GET').then((response) => { 
             let req = JSON.parse(response.response).results;
             for(let i = 0; i < req.length; i++){
                 self.createRequest(req[i]);
@@ -114,7 +114,7 @@ function RequestsViewModel() {
         self.flashMessages([]);
 
         if(self.validateForm(data) > 0) return;
-        self.request('/','requests','POST',data).then((response) => {
+        self.ajax('/','requests','POST',data).then((response) => {
             let entry = JSON.parse(response.response);
             self.createRequest(entry);
             //reset form
@@ -136,13 +136,13 @@ function RequestsViewModel() {
         self.flashMessages([]);
         if(self.validateForm(data) > 0) return;
             
-        self.request('/','requests/'+req.id,'PUT',data).then((response) => {
+        self.ajax('/','requests/'+req.id,'PUT',data).then((response) => {
             self.toogleEdit(req);
         });
     };
     
     self.deleteRequest = function(req){
-        self.request('/','requests/'+req.id,'DELETE').then((response) => {
+        self.ajax('/','requests/'+req.id,'DELETE').then((response) => {
             self.requests.destroy(req);
         });
     };
@@ -180,6 +180,8 @@ function RequestsViewModel() {
 
     //TODO: sorting functions
     self.sort = function(){};
+    //TODO: filter function
+    self.filter = function(){};
     
     //Toogle the create request form
     self.toogleCreateReq = function(el){
@@ -188,17 +190,20 @@ function RequestsViewModel() {
         else
             self.toogleNewRequest(null);
     };
-    
+
+    //show or hide the details of a request
     self.toogleDetails = function(req){
         let action = req.fullDisplay() ? false : true;
         req.fullDisplay(action);
     };
 
+    //enable or disable edit mode
     self.toogleEdit = function(req){
         let action = req.isEdited() ? false : true;
         req.isEdited(action);
     };
 
+    //Restore the old version of the request and cancel edit mode, WIP
     self.cancelEdit = function(req){
         //TODO: should restore old request state before
         self.toogleEdit(req);

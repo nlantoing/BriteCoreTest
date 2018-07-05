@@ -1,0 +1,3 @@
+graft requests_manager/static
+graft requests_manager/templates
+globalexclude *.pyc
