@@ -7,13 +7,14 @@ import datetime
 db = SQLAlchemy()
 
 class Client(db.Model):
+    """ Handle clients table and operations """
     __tablename__ = 'clients'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32),unique=True, nullable=False)
     requests = db.relationship('Request', backref='client', lazy=True)
 
     def jsonize(self):
-        #yup I know this is not even a word
+        """ yup I know this is not even a word """
         return {
             'id': self.id,
             'name': self.name
@@ -24,6 +25,7 @@ class Client(db.Model):
 
 
 class Product_Area(db.Model):
+    """ Handle products areas table and operations """
     __tablename__ = 'products_areas'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32), unique=True, nullable=False)
@@ -39,6 +41,7 @@ class Product_Area(db.Model):
         return self.name
 
 class Request(db.Model):
+    """ Handle requests table and operations """
     __tablename__ = 'requests'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(32), nullable=False)
@@ -49,7 +52,7 @@ class Request(db.Model):
     product_area_id = db.Column(db.Integer, db.ForeignKey('products_areas.id'), nullable=False)
     
     def jsonize(self):
-        #Should not happen but happened a few times anyway, TODO: fixme!
+        #Should not happen but we never know, should throw an error: TODO
         if self.client is None:
             self.client = Client(name='Broken')
         if self.product_area is None:
@@ -66,5 +69,5 @@ class Request(db.Model):
         }
 
     def __repr__(self):
-            return "%s" % (self.title)
+        return "%s" % (self.title)
 
