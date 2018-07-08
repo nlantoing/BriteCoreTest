@@ -1,24 +1,25 @@
-NOTES :
+### NOTES : ###
 
 
 Small requests manager project, using flask, SQLAlchemy and KnockoutJS
 
 
-INSTALL :
+### INSTALL : ###
 
+Dependencies : Python >= 3.6
 
-pip install .
+> pip install .
 
 generate and populate the sqlite database :
 
-python requests_manager/db_mock.py
+> python requests_manager/db_mock.py
 
-start the server
+To start the server run the run.sh script from the root directory
 
-./run.sh
+> ./run.sh
 
 
-WORK IN PROGRESS :
+#### WORK IN PROGRESS : ####
 
 * Use alembic to allow data migration and remove the db_mock.py script
 * Allow to Add/edit/remove Clients and Products_Areas
