@@ -18,6 +18,9 @@ To start the server run the run.sh script from the root directory
 
 > ./run.sh
 
+Access the manager from
+
+> http://localhost:5000/
 
 #### WORK IN PROGRESS : ####
 
