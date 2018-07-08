@@ -27,4 +27,5 @@ To start the server run the run.sh script from the root directory
 * Better css as it is super ugly right now
 * Sort and filter options
 * Warnings and highlight requests which are overtime or close to it
-
+* Add unit testing and eventually functional testing
+* Deploy a live version with that current TODO list
