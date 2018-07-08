@@ -1,29 +1,29 @@
+NOTES :
 
 
+Small requests manager project, using flask, SQLAlchemy and KnockoutJS
 
 
-
-NOTES:
-
-REST web services
-SQlite3 database (lite relational database) 
-
-    
-python 3
+INSTALL :
 
 
-  //start the server
-  ./run.sh
-
-INSTALL
-
-//dependencies
 pip install .
-or
-pip install Flask SQLAlchemy flask_sqlalchemy pytest
-//create the virtualenv
-python3 -m venv venv
-  //activate it
-  . venv/bin/activate
-//generate and populate the sqlite database :
-python db_mock.py
+
+generate and populate the sqlite database :
+
+python requests_manager/db_mock.py
+
+start the server
+
+./run.sh
+
+
+WORK IN PROGRESS :
+
+* Use alembic to allow data migration and remove the db_mock.py script
+* Allow to Add/edit/remove Clients and Products_Areas
+* Konami code! Because why not
+* Better css as it is super ugly right now
+* Sort and filter options
+* Warnings and highlight requests which are overtime or close to it
+

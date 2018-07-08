@@ -21,6 +21,7 @@ def hello():
 @bp.route('/clients', methods=['GET'])
 def getClients():
     """ Get clients list, return a JSON type response """
+    print(db)
     requests = db.session.query(Client).all()
     return jsonify(results=[i.jsonize() for i in requests]), 200, {'ContentType':'application/json'}
 

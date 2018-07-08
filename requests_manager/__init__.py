@@ -7,9 +7,8 @@ def create_app(test_config=None):
     app = Flask(__name__, instance_relative_config=True)
     app.config.from_mapping(
         SECRET_KEY='dev',
-        DATABASE=os.path.join(app.instance_path, 'request_manager.sqlite'),
         DEBUG = True,
-        SQLALCHEMY_DATABASE_URI = 'sqlite:///britecore.db',
+        SQLALCHEMY_DATABASE_URI='sqlite:///britecore.db',
         SQLALCHEMY_TRACK_MODIFICATIONS = False
     )
 
