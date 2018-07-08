@@ -7,6 +7,10 @@ select{
     padding: 3px 15px;
 }
 
+button:hover{
+    cursor: pointer;
+}
+
 /* Requests list section */
 
 .request_list{

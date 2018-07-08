@@ -7,6 +7,8 @@ bp = Blueprint('requests', __name__, url_prefix="/")
 
 def isNumber(value):
     """ check if a string is a proper number """
+    if value is None:
+        return False
     try:
         int(value)
         return True
@@ -48,7 +50,8 @@ def createRequest():
             raise ValueError("You must specify a date")
         if not isNumber(data.get('priority')):
             raise ValueError("Priority must be a number")
-        
+
+        #TODO: client and product_area should use the suffix _id as in the modify request template to be consistent between services
         entry = Request(
             title = data.get('title'),
             description = data.get('description'),

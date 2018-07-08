@@ -1,4 +1,4 @@
-from database import db, Client, Request, Product_Area
+from requests_manager.database import db, Client, Request, Product_Area
 from requests_manager import create_app
 import flask
 import datetime
@@ -7,14 +7,15 @@ import contextlib
 # TODO : REMOVEME and use alembic instead
 
 @contextlib.contextmanager
-def db_context():
-    app = create_app()
+def db_context(app):
+    if app is None:
+        app = create_app()
     with app.app_context():
         yield
 
 
-def init_db():
-    with db_context():
+def init_db(app=None):
+    with db_context(app):
         db.create_all()
         db.session.add_all([
             Client(name='Client A'),
