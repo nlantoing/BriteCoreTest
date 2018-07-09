@@ -27,6 +27,10 @@ def test_getRequests(client):
     result =  json_of_response(response)['results']
     assert len(result) == 1
 
+def test_getSingleRequest(client):
+    assert client.get('/requests/999').status_code == 404
+    assert client.get('/requests/1').status_code == 200
+    
 def test_createRequest(client):
     #empty request
     data={

@@ -1,3 +1,4 @@
+
 ### NOTES : ###
 
 
@@ -6,9 +7,16 @@ Small requests manager project, using flask, SQLAlchemy and KnockoutJS
 
 ### INSTALL : ###
 
-Dependencies : Python >= 3.6
+Dependencies : Python >= 3.5
 
-> pip install .
+Build and activate the venv, this part is optional but highly recommended, you only need the second command after the first time
+
+> python3 -m venv venv
+> . venv/bin/activate
+
+Install the project in edit mode (WIP, there is an issue with how the DB is initialized which prevent the app to function properly if you are not on edit mode)
+
+> pip install -e .
 
 generate and populate the sqlite database :
 
@@ -22,13 +30,6 @@ Access the manager from
 
 > http://localhost:5000/
 
-#### WORK IN PROGRESS : ####
+Or the current live Demo with all the current tasks on it :
 
-* Use alembic to allow data migration and remove the db_mock.py script
-* Allow to Add/edit/remove Clients and Products_Areas
-* Konami code! Because why not
-* Better css as it is super ugly right now
-* Sort and filter options
-* Warnings and highlight requests which are overtime or close to it
-* Add MOAR unit testing!
-* Deploy a live version with that current TODO list
+> http://34.253.155.194

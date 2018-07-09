@@ -39,6 +39,19 @@ def getRequests():
     requests = db.session.query(Request).order_by(Request.priority).all()
     return jsonify(results=[i.jsonize() for i in requests]), 200, {'ContentType':'application/json'}
 
+@bp.route('/requests/<int:request_id>',methods=['GET'])
+def getSingleRequest(request_id):
+    """ Get a single request """
+    request = Request.query.get(request_id)
+    if request is not None:
+        return jsonify(results=request.jsonize()), 200, {'ContentType': 'application/json'}
+    else:
+        return jsonify({
+            'message': "This request don't exist!",
+            'data': request_id
+        }), 404, {'ContentType':'application/json'}
+
+
 @bp.route('/requests',methods=['POST'])
 def createRequest():
     """ Create a new request """

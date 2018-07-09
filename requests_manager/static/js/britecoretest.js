@@ -57,7 +57,6 @@ function RequestsViewModel() {
     //WEB SERVICES
 
     //make an AJAX request
-    //TODO: rename, ambiguous with the Request model
     //return a promise
     self.ajax = function(domain,addr,method,data){
         return new Promise((action,reject) => {
@@ -169,6 +168,10 @@ function RequestsViewModel() {
             self.flashMessages.push("You must specify a due date");
             errorCount++;
         }
+	if(new Date(data.get('due_date')) < new Date()){
+	    self.flashMessage.push("You have specified a due date prior to the current one, it will fill developers mailbox with warning and turn them more grumpy than usual (yes they can) so we prevented you to submit that request, contact the administrator and face the consequencies!");
+	    errorCount++;
+	}
         if(isNaN(data.get('priority'))) {
             self.flashMessages.push("Priority must be a number");
             errorCount++;
