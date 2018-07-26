@@ -1,5 +1,5 @@
-from requests_manager.database import db, Client, Request, Product_Area
-from requests_manager import create_app
+from database import db, Client, Request, Product_Area
+from app import create_app
 import flask
 import datetime
 import contextlib

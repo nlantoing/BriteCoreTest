@@ -25,10 +25,10 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    from . import database
+    import database
     database.db.init_app(app)
     
-    from . import server
+    import server
     app.register_blueprint(server.bp)
     
     return app

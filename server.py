@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request, render_template, g, Blueprint
-from requests_manager.database import db, Client, Product_Area, Request
+from database import db, Client, Product_Area, Request
 import datetime
 
 #Meh' don't got any inspiration for a proper prefix and has this app will probably get only one BP...

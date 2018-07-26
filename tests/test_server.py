@@ -1,5 +1,5 @@
 import json
-from requests_manager import create_app
+from app import create_app
 
 def json_of_response(response):
     """ Decode the json response from a service """

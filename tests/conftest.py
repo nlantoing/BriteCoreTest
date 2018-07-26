@@ -1,8 +1,9 @@
 import os
 import tempfile
 import pytest
-from requests_manager import create_app, db_mock
-from requests_manager.database import db
+from app import create_app
+import db_mock
+from database import db
 
 @pytest.fixture
 def app():
