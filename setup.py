@@ -10,6 +10,7 @@ setup(
         'Flask',
         'SQLAlchemy',
         'flask_sqlalchemy',
+        "flask-migrate",
         'pytest',
         'coverage'
     ],

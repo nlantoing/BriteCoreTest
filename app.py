@@ -1,6 +1,7 @@
 import os
 
 from flask import Flask
+from flask_migrate import Migrate
 
 def create_app(test_config=None):
     # create and configure the app
@@ -25,10 +26,11 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    import database
-    database.db.init_app(app)
+    from database import db
+    db.init_app(app)
+    migrate = Migrate(app,db)
     
-    import server
-    app.register_blueprint(server.bp)
+    from server import bp
+    app.register_blueprint(bp)
     
     return app
