@@ -20,7 +20,9 @@ Install the project in edit mode (WIP, there is an issue with how the DB is init
 
 generate and populate the sqlite database :
 
-> python requests_manager/db_mock.py
+> flask db init
+> flask db upgrade
+> python db_mock.py
 
 To start the server run the run.sh script from the root directory
 
