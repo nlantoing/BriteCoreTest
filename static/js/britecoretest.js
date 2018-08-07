@@ -7,51 +7,61 @@ ko.bindingHandlers.enable = {
     }
 };
 
-//Client model
-function Client(id, name) {
+//User model
+function User(id, name) {
     const self = this;
     self.id = id;
     self.name = name;
 };
 
-//ProductArea model
-function ProductArea(id, name) {
+//Project model
+function Project(id, name) {
     const self = this;
     self.id = id;
     self.name = name;
 };
 
-//Request representation
-function Request(request) {
+//Category model
+function Category(id, name) {
     const self = this;
-    self.id = request.id;
-    self.title = ko.observable(request.title);
-    self.description = ko.observable(request.description);
-    self.priority = ko.observable(request.priority);
-    self.due_date = ko.observable(request.due_date.toISOString().slice(0,10));
+    self.id = id;
+    self.name = name;
+};
+
+
+//Task representation
+function Task(task) {
+    const self = this;
+    self.id = task.id;
+    self.title = ko.observable(task.title);
+    self.description = ko.observable(task.description);
+    self.priority = ko.observable(task.priority);
+    self.due_date = ko.observable(task.due_date.toISOString().slice(0,10));
     self.target_date = ko.computed(function(){
         return new Date(this.due_date()).getTime() / 1000;
     },this);
     //TODO : should we just get the id and retrieve the correct instance here?
-    self.client = ko.observable(request.client);
-    self.product_area = ko.observable(request.product_area);
+    self.user_id = ko.observable(task.user_id);
+    self.project_id = ko.observable(task.project_id);
+    self.category_id = ko.observable(task.category_id);
     self.fullDisplay = ko.observable(false);
     self.isEdited = ko.observable(false);
 };
 
-function RequestsViewModel() {
+function TasksViewModel() {
     //not needed anymore with ES6 but I guess it is better to keep it
     const self = this;
 
-    //TODO: I think the whole new request form part should be in his own viewModel class
+    //TODO: I think the whole new task form part should be in his own viewModel class
     
     //PARAMETERS
-    self.clients = ko.observableArray();
-    self.productsAreas = ko.observableArray();
-    self.requests = ko.observableArray();
+    self.users = ko.observableArray();
+    self.projects = ko.observableArray();
+    self.categories = ko.observableArray();
+    self.tasks = ko.observableArray();
 
-    //new requests params, moveme to the new class once done
-    self.toogleNewRequest = ko.observable(null);
+    //new tasks params, moveme to the new class once done
+    self.toogleNewTask = ko.observable(null);
     self.flashMessages = ko.observableArray([]);
 
     //WEB SERVICES
@@ -74,38 +84,48 @@ function RequestsViewModel() {
     };
     
     //  get
-    //get clients list
-    self.getClients = function(){
-        self.ajax('/','clients','GET').then((response) => {
+    //get users list
+    self.getUsers = function(){
+        self.ajax('/','users','GET').then((response) => {
             
-            let clients = JSON.parse(response.response).results;
-            for(let i = 0; i < clients.length; i++){
-                self.clients.push(new Client(clients[i].id,clients[i].name));
+            let users = JSON.parse(response.response).results;
+            for(let i = 0; i < users.length; i++){
+                self.users.push(new User(users[i].id,users[i].name));
             }
         });
     };
     //get products areas list
-    self.getProductsAreas = function(){
-        self.ajax('/','products_areas','GET').then((response) => {
+    self.getProjects = function(){
+        self.ajax('/','projects','GET').then((response) => {
             
             let pa = JSON.parse(response.response).results;
             for(let i = 0; i < pa.length; i++){
-                self.productsAreas.push(new ProductArea(pa[i].id, pa[i].name));
+                self.projects.push(new Project(pa[i].id, pa[i].name));
             }
         });
     };
-    //get existing requests
-    self.getRequests = function(){
-        self.ajax('/','requests','GET').then((response) => { 
+    //get categories list
+    self.getCategories = function(){
+        self.ajax('/','categories','GET').then((response) => {
+            
+            let pa = JSON.parse(response.response).results;
+            for(let i = 0; i < pa.length; i++){
+                self.categories.push(new Category(pa[i].id, pa[i].name));
+            }
+        });
+    };
+    //get existing tasks
+    self.getTasks = function(){
+        self.ajax('/','tasks','GET').then((response) => { 
             let req = JSON.parse(response.response).results;
             for(let i = 0; i < req.length; i++){
-                self.createRequest(req[i]);
+                self.createTask(req[i]);
             }
         });
     };
 
     //  post/put/delete
-    self.postRequest = function(form){
+    self.postTask = function(form){
         let data = new FormData(form);
         data.append('target_date', new Date(data.get('due_date')).getTime()/1000);
 
@@ -113,47 +133,48 @@ function RequestsViewModel() {
         self.flashMessages([]);
 
         if(self.validateForm(data) > 0) return;
-        self.ajax('/','requests','POST',data).then((response) => {
+        self.ajax('/','tasks','POST',data).then((response) => {
             let entry = JSON.parse(response.response);
-            self.createRequest(entry);
+            self.createTask(entry);
             //reset form
-            self.toogleNewRequest(null);
+            self.toogleNewTask(null);
             self.flashMessages([]);
         });
     };
     
-    self.updateRequest = function(req){
+    self.updateTask = function(req){
         let data = new FormData();
         data.append('title',req.title());
         data.append('description',req.description());
         data.append('priority', req.priority());
         data.append('target_date', req.target_date());
-        data.append('client_id', req.client().id);
-        data.append('product_area_id', req.product_area().id);
+        data.append('user_id', req.user_id);
+        data.append('project_id', req.product_area_id);
+	data.append('category_id', req.category_id);
 
-        //check if everything alright before sending the request
+        //check if everything alright before sending the task
         self.flashMessages([]);
         if(self.validateForm(data) > 0) return;
             
-        self.ajax('/','requests/'+req.id,'PUT',data).then((response) => {
+        self.ajax('/','tasks/'+req.id,'PUT',data).then((response) => {
             self.toogleEdit(req);
         });
     };
     
-    self.deleteRequest = function(req){
-        self.ajax('/','requests/'+req.id,'DELETE').then((response) => {
-            self.requests.destroy(req);
+    self.deleteTask = function(req){
+        self.ajax('/','tasks/'+req.id,'DELETE').then((response) => {
+            self.tasks.destroy(req);
         });
     };
 
     //ACTIONS
-    //create a new request from a JSON entry returned by the server
-    self.createRequest = function(entry){
+    //create a new task from a JSON entry returned by the server
+    self.createTask = function(entry){
         entry.due_date = new Date(entry.target_date);
-        self.requests.push(new Request(entry));
+        self.tasks.push(new Task(entry));
     };
 
-    //validate a request form (for update or create) or display an alert if any input is invalid
+    //validate a task form (for update or create) or display an alert if any input is invalid
     self.validateForm = function(data){
         var errorCount = 0;
         if("" === data.get('title')){
@@ -169,7 +190,7 @@ function RequestsViewModel() {
             errorCount++;
         }
 	if(new Date(data.get('due_date')) < new Date()){
-	    self.flashMessage.push("You have specified a due date prior to the current one, it will fill developers mailbox with warning and turn them more grumpy than usual (yes they can) so we prevented you to submit that request, contact the administrator and face the consequencies!");
+	    self.flashMessage.push("You have specified a due date prior to the current one, it will fill developers mailbox with warning and turn them more grumpy than usual (yes they can) so we prevented you to submit that task, contact the administrator and face the consequencies!");
 	    errorCount++;
 	}
         if(isNaN(data.get('priority'))) {
@@ -186,15 +207,15 @@ function RequestsViewModel() {
     //TODO: filter function
     self.filter = function(){};
     
-    //Toogle the create request form
+    //Toogle the create task form
     self.toogleCreateReq = function(el){
-        if(null === self.toogleNewRequest())
-            self.toogleNewRequest(true);
+        if(null === self.toogleNewTask())
+            self.toogleNewTask(true);
         else
-            self.toogleNewRequest(null);
+            self.toogleNewTask(null);
     };
 
-    //show or hide the details of a request
+    //show or hide the details of a task
     self.toogleDetails = function(req){
         let action = req.fullDisplay() ? false : true;
         req.fullDisplay(action);
@@ -206,18 +227,19 @@ function RequestsViewModel() {
         req.isEdited(action);
     };
 
-    //Restore the old version of the request and cancel edit mode, WIP
+    //Restore the old version of the task and cancel edit mode, WIP
     self.cancelEdit = function(req){
-        //TODO: should restore old request state before
+        //TODO: should restore old task state before
         self.toogleEdit(req);
     };
     
     //INIT
-    self.getClients();
-    self.getProductsAreas();
-    self.getRequests();
+    self.getUsers();
+    self.getProjects();
+    self.getCategories();
+    self.getTasks();
 };
 
 window.addEventListener("load", function(e) { 
-    ko.applyBindings(new RequestsViewModel(), document.getElementById("content"));
+    ko.applyBindings(new TasksViewModel(), document.getElementById("content"));
 });

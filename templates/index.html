@@ -19,28 +19,26 @@
   </head>
   <body>
     <article id="content" class="container-fluid">
-      <!-- Requests list -->
-      <section class="container request_list">
-        <ol data-bind="foreach: requests">
+      <!-- Tasks list -->
+      <section class="container task_list">
+        <ol data-bind="foreach: tasks">
           
           <li class="row legend" data-bind="if: 0 === $index()">
             <label class="col-xs-2">Title</label>
             <label class="col-xs-1">Priority</label>
-            <label class="col-xs-2">Client</label>
-            <label class="col-xs-2">Product Area</label>
+            <label class="col-xs-2">Project</label>
             <label class="col-xs-2">Due date</label>
-            
           </li>
           
           <li class="row">
             <input class="col-xs-2" type="text" data-bind="value: title, enable: isEdited()" />
             <input class="col-xs-1" type="text" data-bind="value: priority, enable: isEdited()"/>
             <select class="col-xs-2" type="text" data-bind="enable: isEdited(),
-                                           value: client().id, foreach: $parent.clients">
+                                           value: user().id, foreach: $parent.users">
               <option data-bind="text: name, value: id"></option>
             </select>
             <select class="col-xs-2" data-bind="enable: isEdited(),
-                               value: product_area().id, foreach: $parent.productsAreas">
+                               value: project().id, foreach: $parent.projects">
               <option data-bind="text: name, value: id"></option>
             </select>
             <span class="col-xs-2">
@@ -50,7 +48,7 @@
             
             <span  class="col-xs-3">
               <input data-bind="click: $parent.toogleDetails" type="button" value="Details" />
-              <input data-bind="click: $parent.deleteRequest" type="button" value="Remove" />
+              <input data-bind="click: $parent.deleteTask" type="button" value="Remove" />
             </span>
             <!-- Details -->
             <p data-bind="visible: fullDisplay()">
@@ -58,20 +56,20 @@
               <span class="col-xs-3">
                 <input data-bind="click: $parent.toogleEdit, visible: !isEdited()" type="button" value="edit"/>
                 <input data-bind="click: $parent.cancelEdit, visible: isEdited()" type="button" value="cancel"/>
-                <input data-bind="click: $parent.updateRequest, visible: isEdited()" type="button" value="save"/>
+                <input data-bind="click: $parent.updateTask, visible: isEdited()" type="button" value="save"/>
               </span>
             </p>
           </li>
         </ol>
       </section>
 
-      <!-- adding new request form -->
-      <section class="request_add container">
-        <button class="createReq_button" data-bind="click: toogleCreateReq">Add new request</button>
+      <!-- adding new task form -->
+      <section class="task_add container">
+        <button class="createReq_button" data-bind="click: toogleCreateReq">Add new task</button>
 
         <!-- form -->
-        <div class="createReq_form" data-bind="visible: toogleNewRequest()">
-          <form name="create_request_form" data-bind="submit: postRequest" action="/requests" method="post">
+        <div class="createReq_form" data-bind="visible: toogleNewTask()">
+          <form name="create_task_form" data-bind="submit: postTask" action="/tasks" method="post">
             <p class="row">
               <label class="col-xs-3">Title :</label>
               <input class="col-xs-8" type="text" name="title" data-bind="" />
@@ -89,17 +87,24 @@
               <input class="col-xs-8" name="due_date" type="date" />
             </p>
             <p class="row">
-              <label class="col-xs-3">Client :</label>
-              <select class="col-xs-8" name="client" data-bind="foreach: clients">
+              <label class="col-xs-3">User :</label>
+              <select class="col-xs-8" name="user_id" data-bind="foreach: users">
                 <option data-bind="text: name, value: id"></option>
               </select>
             </p>
             <p class="row">
-              <label class="col-xs-3">Product area :</label>
-              <select class="col-xs-8" name="product_area" data-bind="foreach: productsAreas">
+              <label class="col-xs-3">Project :</label>
+              <select class="col-xs-8" name="project_id" data-bind="foreach: projects">
                 <option data-bind="text: name, value: id"></option>
               </select>
             </p>
+	    <p class="row">
+              <label class="col-xs-3">Category :</label>
+              <select class="col-xs-8" name="category_id" data-bind="foreach: categories">
+                <option data-bind="text: name, value: id"></option>
+              </select>
+            </p>
+
             <p class="row">
               <input class="col-xs-offset-1 col-xs-1" type="submit" value="save" />
             </p>
