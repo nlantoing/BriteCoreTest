@@ -1,4 +1,4 @@
-from database import db, Client, Request, Product_Area
+from database import db, User, Category, Project, Task
 from app import create_app
 import flask
 import datetime
@@ -17,30 +17,36 @@ def db_context(app):
 def init_db(app=None):
     with db_context(app):
         db.create_all()
+        db.session.add(User(
+            name='Guest',
+            salt='abc',
+            password='test'))
+        db.session.commit()
+
         db.session.add_all([
-            Client(name='Client A'),
-            Client(name='Client B'),
-            Client(name='Client C'),
-            Client(name='Client D'),
-            Client(name='Client E')])
+            Project(name='TaskManager'),
+            Project(name='Astrarium'),
+            Project(name='JavascriptBinaryTree'),
+            Project(name='PathFinder')])
 
         db.session.commit()
 
         db.session.add_all([
-            Product_Area(name='Policies'),
-            Product_Area(name='Billing'),
-            Product_Area(name='Claims'),
-            Product_Area(name='Reports')])
-
+            Category(name='Frontend'),
+            Category(name='Backend'),
+            Category(name='View'),
+            Category(name='Admin')])
         db.session.commit()
 
-        db.session.add(Request(
+
+        db.session.add(Task(
             title="Test request",
             description="Just populate the request table with one query to ease development",
             target_date = datetime.datetime.now(),
             priority=1,
-            client_id=1,
-            product_area_id=1))
+            user_id=1,
+            project_id=1,
+            category_id=1))
         db.session.commit()
 
 

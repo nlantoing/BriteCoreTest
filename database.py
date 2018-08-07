@@ -6,12 +6,14 @@ import datetime
 
 db = SQLAlchemy()
 
-class Client(db.Model):
+class User(db.Model):
     """ Handle clients table and operations """
-    __tablename__ = 'clients'
+    __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32),unique=True, nullable=False)
-    requests = db.relationship('Request', backref='client', lazy=True)
+    salt = db.Column(db.String(3), nullable=False)
+    password = db.Column(db.String(64), nullable=False)
+    tasks = db.relationship("Task",backref="owner")
 
     def jsonize(self):
         """ yup I know this is not even a word """
@@ -24,12 +26,12 @@ class Client(db.Model):
         return self.name
 
 
-class Product_Area(db.Model):
+class Project(db.Model):
     """ Handle products areas table and operations """
-    __tablename__ = 'products_areas'
+    __tablename__ = 'projects'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(32), unique=True, nullable=False)
-    requests = db.relationship('Request', backref='product_area', lazy=True)
+    tasks = db.relationship("Task",backref="project")
 
     def jsonize(self):
         return {
@@ -40,23 +42,35 @@ class Product_Area(db.Model):
     def __repr__(self):
         return self.name
 
-class Request(db.Model):
-    """ Handle requests table and operations """
-    __tablename__ = 'requests'
+class Category(db.Model):
+    """ Task category (front, back etc) """
+    __tablename__ = 'categories'
+    id = db.Column(db.Integer, primary_key=True)
+    name= db.Column(db.String(32), unique=True, nullable=False)
+    tasks = db.relationship("Task",backref="category")
+
+    def jsonize(self):
+        return {
+            'id': self.id,
+            'name': self.name
+        }
+    
+    def __repr__(self):
+        return self.name
+    
+class Task(db.Model):
+    """ Tasks table """
+    __tablename__ = 'tasks'
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(32), nullable=False)
     description = db.Column(db.String(512))
     priority = db.Column(db.Integer)
     target_date = db.Column(db.Date)
-    client_id = db.Column(db.Integer, db.ForeignKey('clients.id'), nullable=False)
-    product_area_id = db.Column(db.Integer, db.ForeignKey('products_areas.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    project_id = db.Column(db.Integer, db.ForeignKey('projects.id'), nullable=False)
+    category_id = db.Column(db.Integer, db.ForeignKey('categories.id'), nullable=False)
     
     def jsonize(self):
-        #Should not happen but we never know, should throw an error: TODO
-        if self.client is None:
-            self.client = Client(name='Broken')
-        if self.product_area is None:
-            self.product_area = Product_Area(name='Broken')
         
         return {
             'id': self.id,
@@ -64,10 +78,11 @@ class Request(db.Model):
             'description': self.description,
             'priority': self.priority,
             'target_date': self.target_date,
-            'client' : self.client.jsonize(),
-            'product_area' : self.product_area.jsonize()
+            'owner' : self.owner.jsonize(),
+            'project' : self.project.jsonize(),
+            'category': self.category.jsonize()
         }
 
     def __repr__(self):
-        return "%s" % (self.title)
+        return "%s : %s" % (self.title, self.description)
 
