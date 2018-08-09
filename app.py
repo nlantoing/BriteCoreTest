@@ -9,7 +9,7 @@ def create_app(test_config=None):
     app.config.from_mapping(
         SECRET_KEY='dev', #TODO: Change me
         DEBUG = True,
-        SQLALCHEMY_DATABASE_URI='sqlite:///britecore.db',
+        SQLALCHEMY_DATABASE_URI='sqlite:///tasks.db',
         SQLALCHEMY_TRACK_MODIFICATIONS = False
     )
 
