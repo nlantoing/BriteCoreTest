@@ -44,7 +44,7 @@ def getCategories():
 def getTasks():
     """ Get current tasks list, return a JSON type response """
     tasks = db.session.query(Task).order_by(Task.priority).all()
-    return jsonify(results=[i.jsonize() for i in tasks]), 200, {'ContentType':'application/json'}
+    return jsonify([i.jsonize() for i in tasks]), 200, {'ContentType':'application/json'}
 
 @bp.route('/tasks/<int:task_id>',methods=['GET'])
 def getSingleTask(task_id):

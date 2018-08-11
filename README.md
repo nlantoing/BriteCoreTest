@@ -2,7 +2,7 @@
 ### NOTES : ###
 
 
-Small requests manager project, using flask, SQLAlchemy and KnockoutJS
+Small requests manager project, using flask, SQLAlchemy and Angular(2.X)
 
 
 ### INSTALL : ###
