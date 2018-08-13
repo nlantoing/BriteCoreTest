@@ -2,7 +2,7 @@
 ### NOTES : ###
 
 
-Small requests manager project, using flask, SQLAlchemy and Angular(2.X)
+Small requests manager project, using flask, SQLAlchemy and Angular(2.4)
 
 
 ### INSTALL : ###
@@ -24,13 +24,17 @@ generate and populate the sqlite database :
 > flask db upgrade
 > python db_mock.py
 
-To start the server run the run.sh script from the root directory
+To start flask the server run the run.sh script from the root directory
 
 > ./run.sh
 
+To start angular server (this require the angular ng command tool)
+
+> cd frontend && ng serve
+
 Access the manager from
 
-> http://localhost:5000/
+> http://localhost:4200/
 
 Or the current live Demo with all the current tasks on it :
 

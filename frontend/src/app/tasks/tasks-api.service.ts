@@ -20,7 +20,8 @@ export class TasksApiService {
   // GET tasks
     public getTasks(): Observable<Task[]> {
 	let tasks = this.http
-	    .get<Task[]>(`${API_URL}/tasks`);
+	    .get<Task[]>(`${API_URL}/tasks`)
+	    .catch(TasksApiService._handleError);
 	return tasks;
     }
 }
